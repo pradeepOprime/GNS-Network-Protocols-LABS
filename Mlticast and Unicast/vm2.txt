@@ -1,0 +1,77 @@
+vm2
+
+Last login: Sun Oct  7 02:58:04 PDT 2018 on ttyS0
+Welcome to Ubuntu 14.04 LTS (GNU/Linux 3.13.0-24-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+mininet@mininet-vm:~$ sudo ifconfig eth0 4.4.4.100 netmask 255.255.255.0
+mininet@mininet-vm:~$ sudo route add default gw 4.4.4.4 eth0
+mininet@mininet-vm:~$ ping 172.16.0.100
+PING 172.16.0.100 (172.16.0.100) 56(84) bytes of data.
+64 bytes from 172.16.0.100: icmp_seq=1 ttl=61 time=34.0 ms
+64 bytes from 172.16.0.100: icmp_seq=2 ttl=61 time=43.1 ms
+64 bytes from 172.16.0.100: icmp_seq=3 ttl=61 time=41.1 ms
+64 bytes from 172.16.0.100: icmp_seq=4 ttl=61 time=38.2 ms
+64 bytes from 172.16.0.100: icmp_seq=5 ttl=61 time=36.2 ms
+64 bytes from 172.16.0.100: icmp_seq=6 ttl=61 time=34.3 ms
+64 bytes from 172.16.0.100: icmp_seq=7 ttl=61 time=42.1 ms
+64 bytes from 172.16.0.100: icmp_seq=8 ttl=61 time=40.1 ms
+64 bytes from 172.16.0.100: icmp_seq=9 ttl=61 time=37.2 ms
+64 bytes from 172.16.0.100: icmp_seq=10 ttl=61 time=34.2 ms
+64 bytes from 172.16.0.100: icmp_seq=11 ttl=61 time=41.1 ms
+64 bytes from 172.16.0.100: icmp_seq=12 ttl=61 time=37.2 ms
+64 bytes from 172.16.0.100: icmp_seq=13 ttl=61 time=35.2 ms
+64 bytes from 172.16.0.100: icmp_seq=14 ttl=61 time=53.8 ms
+64 bytes from 172.16.0.100: icmp_seq=15 ttl=61 time=60.6 ms
+64 bytes from 172.16.0.100: icmp_seq=16 ttl=61 time=41.0 ms
+64 bytes from 172.16.0.100: icmp_seq=17 ttl=61 time=48.9 ms
+64 bytes from 172.16.0.100: icmp_seq=18 ttl=61 time=43.0 ms
+^C
+--- 172.16.0.100 ping statistics ---
+18 packets transmitted, 18 received, 0% packet loss, time 17022ms
+rtt min/avg/max/mdev = 34.082/41.244/60.657/6.886 ms
+mininet@mininet-vm:~$ sudo bash
+root@mininet-vm:~# Iperf -s -u -B 224.1.1.1 -r 1
+No command 'Iperf' found, did you mean:
+ Command 'gperf' from package 'gperf' (main)
+ Command 'perf' from package 'linux-tools-common' (main)
+ Command 'operf' from package 'oprofile' (universe)
+ Command 'iperf' from package 'iperf' (universe)
+Iperf: command not found
+root@mininet-vm:~# iperf -s -u -B 224.1.1.1 -r 1
+WARNING: option -r is not valid for server mode
+iperf: ignoring extra argument -- 1
+------------------------------------------------------------
+Server listening on UDP port 5001
+Binding to local address 224.1.1.1
+Joining multicast group  224.1.1.1
+Receiving 1470 byte datagrams
+UDP buffer size:  208 KByte (default)
+------------------------------------------------------------
+[  3] local 224.1.1.1 port 5001 connected with 172.16.0.100 port 46796
+[ ID] Interval       Transfer     Bandwidth        Jitter   Lost/Total Datagrams
+[  3]  0.0- 2.7 sec   235 KBytes   726 Kbits/sec  54.474 ms  105/  269 (39%)
+[  3]  0.0- 2.7 sec  29 datagrams received out-of-order
+
+-------
+
+
+root@mininet-vm:~# iperf -s -u -B 224.1.1.1 -i 1
+------------------------------------------------------------
+Server listening on UDP port 5001
+Binding to local address 224.1.1.1
+Joining multicast group  224.1.1.1
+Receiving 1470 byte datagrams
+UDP buffer size:  208 KByte (default)
+------------------------------------------------------------
+[  3] local 224.1.1.1 port 5001 connected with 172.16.0.100 port 44564
+[ ID] Interval       Transfer     Bandwidth        Jitter   Lost/Total Datagrams
+[  3]  0.0- 1.0 sec   172 KBytes  1.41 Mbits/sec   0.872 ms   28/  120 (23%)
+[  3]  0.0- 1.0 sec  28 datagrams received out-of-order
+[  3]  1.0- 2.0 sec  0.00 Bytes  0.00 bits/sec   0.872 ms    0/    0 (-nan%)
+[  3]  2.0- 3.0 sec  0.00 Bytes  0.00 bits/sec   0.872 ms    0/    0 (-nan%)
+[  3]  3.0- 4.0 sec  0.00 Bytes  0.00 bits/sec   0.872 ms    0/    0 (-nan%)
+[  3]  4.0- 5.0 sec  0.00 Bytes  0.00 bits/sec   0.872 ms    0/    0 (-nan%)
+[  3]  5.0- 6.0 sec  0.00 Bytes  0.00 bits/sec   0.872 ms    0/    0 (-nan%)
+
+

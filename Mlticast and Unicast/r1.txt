@@ -1,0 +1,195 @@
+all r1
+
+R1#show ip route
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
+       + - replicated route, % - next hop override
+
+Gateway of last resort is not set
+
+      1.0.0.0/8 is variably subnetted, 6 subnets, 2 masks
+C        1.1.1.0/24 is directly connected, FastEthernet2/0
+L        1.1.1.1/32 is directly connected, FastEthernet2/0
+C        1.1.2.0/24 is directly connected, FastEthernet2/1
+L        1.1.2.1/32 is directly connected, FastEthernet2/1
+C        1.1.100.0/24 is directly connected, Loopback1
+L        1.1.100.1/32 is directly connected, Loopback1
+      2.0.0.0/24 is subnetted, 1 subnets
+O        2.2.2.0 [110/2] via 1.1.1.2, 00:16:23, FastEthernet2/0
+      3.0.0.0/24 is subnetted, 1 subnets
+O        3.3.3.0 [110/2] via 1.1.2.3, 00:15:18, FastEthernet2/1
+      4.0.0.0/24 is subnetted, 1 subnets
+O        4.4.4.0 [110/3] via 1.1.2.3, 00:07:35, FastEthernet2/1
+                 [110/3] via 1.1.1.2, 00:07:35, FastEthernet2/0
+      172.16.0.0/16 is variably subnetted, 2 subnets, 2 masks
+C        172.16.0.0/24 is directly connected, FastEthernet1/0
+L        172.16.0.1/32 is directly connected, FastEthernet1/0
+
+
+
+
+---
+R1#show ip ospf neighbor
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+3.3.3.3           1   FULL/BDR        00:00:36    1.1.2.3         FastEthernet2/1
+2.2.2.2           1   FULL/BDR        00:00:35    1.1.1.2         FastEthernet2/0
+R1#
+
+
+---
+
+R1#show ip pim neighbor
+PIM Neighbor Table
+Mode: B - Bidir Capable, DR - Designated Router, N - Default DR Priority,
+      P - Proxy Capable, S - State Refresh Capable, G - GenID Capable
+Neighbor          Interface                Uptime/Expires    Ver   DR
+Address                                                            Prio/Mode
+1.1.1.2           FastEthernet2/0          00:43:17/00:01:16 v2    1 / DR S P G
+1.1.2.3           FastEthernet2/1          00:42:35/00:01:29 v2    1 / DR S P G
+R1#
+
+-----
+
+R1#show ip pim neighbor
+PIM Neighbor Table
+Mode: B - Bidir Capable, DR - Designated Router, N - Default DR Priority,
+      P - Proxy Capable, S - State Refresh Capable, G - GenID Capable
+Neighbor          Interface                Uptime/Expires    Ver   DR
+Address                                                            Prio/Mode
+1.1.1.2           FastEthernet2/0          00:43:17/00:01:16 v2    1 / DR S P G
+1.1.2.3           FastEthernet2/1          00:42:35/00:01:29 v2    1 / DR S P G
+
+---
+R1#show ip igmp membership
+Flags: A  - aggregate, T - tracked
+       L  - Local, S - static, V - virtual, R - Reported through v3
+       I - v3lite, U - Urd, M - SSM (S,G) channel
+       1,2,3 - The version of IGMP, the group is in
+Channel/Group-Flags:
+       / - Filtering entry (Exclude mode (S,G), Include mode (G))
+Reporter:
+       <mac-or-ip-address> - last reporter if group is not explicitly tracked
+       <n>/<m>      - <n> reporter in include mode, <m> reporter in exclude
+
+ Channel/Group                  Reporter        Uptime   Exp.  Flags  Interface
+ *,224.0.1.40                   1.1.2.3         00:47:12 02:13 3A     Fa2/1
+ *,224.0.1.40                   1.1.1.2         00:49:53 02:13 3A     Fa2/0
+ *,224.0.1.40                   172.16.0.1      00:54:51 02:09 3LA    Fa1/0
+R1#
+----
+
+R1#show ip mroute
+IP Multicast Routing Table
+Flags: D - Dense, S - Sparse, B - Bidir Group, s - SSM Group, C - Connected,
+       L - Local, P - Pruned, R - RP-bit set, F - Register flag,
+       T - SPT-bit set, J - Join SPT, M - MSDP created entry, E - Extranet,
+       X - Proxy Join Timer Running, A - Candidate for MSDP Advertisement,
+       U - URD, I - Received Source Specific Host Report,
+       Z - Multicast Tunnel, z - MDT-data group sender,
+       Y - Joined MDT-data group, y - Sending to MDT-data group,
+       G - Received BGP C-Mroute, g - Sent BGP C-Mroute,
+       Q - Received BGP S-A Route, q - Sent BGP S-A Route,
+       V - RD & Vector, v - Vector
+Outgoing interface flags: H - Hardware switched, A - Assert winner
+ Timers: Uptime/Expires
+ Interface state: Interface, Next-Hop or VCD, State/Mode
+
+(*, 224.0.1.40), 01:00:26/00:02:43, RP 1.1.100.1, flags: SJCL
+  Incoming interface: Null, RPF nbr 0.0.0.0
+  Outgoing interface list:
+    FastEthernet2/1, Forward/Sparse, 00:52:47/00:02:47
+    FastEthernet2/0, Forward/Sparse, 00:55:28/00:03:05
+    FastEthernet1/0, Forward/Sparse, 01:00:25/00:02:43
+
+R1#
+
+--------
+
+R1#show ip mroute
+IP Multicast Routing Table
+Flags: D - Dense, S - Sparse, B - Bidir Group, s - SSM Group, C - Connected,
+       L - Local, P - Pruned, R - RP-bit set, F - Register flag,
+       T - SPT-bit set, J - Join SPT, M - MSDP created entry, E - Extranet,
+       X - Proxy Join Timer Running, A - Candidate for MSDP Advertisement,
+       U - URD, I - Received Source Specific Host Report,
+       Z - Multicast Tunnel, z - MDT-data group sender,
+       Y - Joined MDT-data group, y - Sending to MDT-data group,
+       G - Received BGP C-Mroute, g - Sent BGP C-Mroute,
+       Q - Received BGP S-A Route, q - Sent BGP S-A Route,
+       V - RD & Vector, v - Vector
+Outgoing interface flags: H - Hardware switched, A - Assert winner
+ Timers: Uptime/Expires
+ Interface state: Interface, Next-Hop or VCD, State/Mode
+
+(*, 224.0.1.40), 01:00:26/00:02:43, RP 1.1.100.1, flags: SJCL
+  Incoming interface: Null, RPF nbr 0.0.0.0
+  Outgoing interface list:
+    FastEthernet2/1, Forward/Sparse, 00:52:47/00:02:47
+    FastEthernet2/0, Forward/Sparse, 00:55:28/00:03:05
+    FastEthernet1/0, Forward/Sparse, 01:00:25/00:02:43
+
+	
+	--------
+	
+	
+R1#show ip mroute
+IP Multicast Routing Table
+Flags: D - Dense, S - Sparse, B - Bidir Group, s - SSM Group, C - Connected,
+       L - Local, P - Pruned, R - RP-bit set, F - Register flag,
+       T - SPT-bit set, J - Join SPT, M - MSDP created entry, E - Extranet,
+       X - Proxy Join Timer Running, A - Candidate for MSDP Advertisement,
+       U - URD, I - Received Source Specific Host Report,
+       Z - Multicast Tunnel, z - MDT-data group sender,
+       Y - Joined MDT-data group, y - Sending to MDT-data group,
+       G - Received BGP C-Mroute, g - Sent BGP C-Mroute,
+       Q - Received BGP S-A Route, q - Sent BGP S-A Route,
+       V - RD & Vector, v - Vector
+Outgoing interface flags: H - Hardware switched, A - Assert winner
+ Timers: Uptime/Expires
+ Interface state: Interface, Next-Hop or VCD, State/Mode
+
+(*, 224.1.1.1), 00:08:21/00:03:01, RP 1.1.100.1, flags: S
+  Incoming interface: Null, RPF nbr 0.0.0.0
+  Outgoing interface list:
+    FastEthernet2/1, Forward/Sparse, 00:08:21/00:03:01
+
+(*, 224.0.1.40), 01:29:06/00:02:59, RP 1.1.100.1, flags: SJCL
+  Incoming interface: Null, RPF nbr 0.0.0.0
+  Outgoing interface list:
+    FastEthernet2/1, Forward/Sparse, 01:21:27/00:02:43
+    FastEthernet2/0, Forward/Sparse, 01:24:08/00:02:55
+    FastEthernet1/0, Forward/Sparse, 01:29:05/00:02:59
+
+R1#
+
+
+-----
+
+R1#show ip igmp membership
+Flags: A  - aggregate, T - tracked
+       L  - Local, S - static, V - virtual, R - Reported through v3
+       I - v3lite, U - Urd, M - SSM (S,G) channel
+       1,2,3 - The version of IGMP, the group is in
+Channel/Group-Flags:
+       / - Filtering entry (Exclude mode (S,G), Include mode (G))
+Reporter:
+       <mac-or-ip-address> - last reporter if group is not explicitly tracked
+       <n>/<m>      - <n> reporter in include mode, <m> reporter in exclude
+
+ Channel/Group                  Reporter        Uptime   Exp.  Flags  Interface
+ *,224.0.1.40                   1.1.2.3         02:48:32 02:59 3A     Fa2/1
+ *,224.0.1.40                   1.1.1.2         02:51:13 02:57 3A     Fa2/0
+ *,224.0.1.40                   172.16.0.1      02:56:11 02:56 3LA    Fa1/0
+R1#
+
+
+
+
+
+

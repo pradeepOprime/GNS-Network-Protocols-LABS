@@ -1,0 +1,130 @@
+1) screen shot PFA
+------------------------------------------------
+2) 
+R2#show ip ospf neighbor
+Neighbor ID     Pri   State Dead    Time       Address       Interface
+172.16.1.1        1    FULL/DR    00:00:39    172.16.1.1   FastEthernet1/1
+R2#
+------------------------------------------------
+3)
+R2#show ip route
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
+       + - replicated route, % - next hop override
+Gateway of last resort is not set
+         172.16.0.0/16 is variably subnetted, 5 subnets, 2 masks
+C        172.16.1.0/30 is directly connected, FastEthernet1/1
+L        172.16.1.2/32 is directly connected, FastEthernet1/1
+C        172.16.1.4/30 is directly connected, FastEthernet0/0
+L        172.16.1.5/32 is directly connected, FastEthernet0/0
+O        172.16.1.8/30 [110/2] via 172.16.1.1, 00:07:09, FastEthernet1/1
+R2#
+
+------------------------------------------------
+
+4)
+Though R3 and R2 are EIGRP neighbors R2 did not display R3's network 3.3.3.0.
+We could see that the routes of R3 are not advertized until the local interface
+corresponding to the network is configured in router R3.
+
+the configuration is done by following commands
+
+R3#config t
+Enter configuration commands, one per line. End with CNTL/Z.
+R3(config)#Interface loopback 3
+R3(config-if)#Ip address 3.3.3.3 255.255.255.0
+R3(config-if)#No shut
+R3(config-if)#end
+R3#
+
+
+------------------------------------------------
+
+5)
+R2#show ip route
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
+       + - replicated route, % - next hop override
+Gateway of last resort is not set
+      1.0.0.0/32 is subnetted, 1 subnets
+O        1.1.1.1 [110/2] via 172.16.1.1, 00:16:05, FastEthernet1/1
+      2.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
+C        2.2.2.0/24 is directly connected, Loopback2
+L        2.2.2.2/32 is directly connected, Loopback2
+      3.0.0.0/24 is subnetted, 1 subnets
+D        3.3.3.0 [90/156160] via 172.16.1.6, 00:00:20, FastEthernet0/0
+      172.16.0.0/16 is variably subnetted, 5 subnets, 2 masks
+C        172.16.1.0/30 is directly connected, FastEthernet1/1
+L        172.16.1.2/32 is directly connected, FastEthernet1/1
+C        172.16.1.4/30 is directly connected, FastEthernet0/0
+L        172.16.1.5/32 is directly connected, FastEthernet0/0
+O        172.16.1.8/30 [110/2] via 172.16.1.1, 00:24:02, FastEthernet1/1
+R2#
+
+------------------------------------------------
+6)
+R3#show ip route
+
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
+       + - replicated route, % - next hop override
+Gateway of last resort is not set
+      1.0.0.0/24 is subnetted, 1 subnets
+D EX     1.4.4.0 [170/284160] via 172.16.1.5, 00:00:32, FastEthernet0/0
+      2.0.0.0/24 is subnetted, 1 subnets
+D        2.2.2.0 [90/156160] via 172.16.1.5, 00:39:32, FastEthernet0/0
+      3.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
+C        3.3.3.0/24 is directly connected, Loopback3
+L        3.3.3.3/32 is directly connected, Loopback3
+      172.16.0.0/16 is variably subnetted, 3 subnets, 2 masks
+D        172.16.1.0/30 [90/30720] via 172.16.1.5, 00:39:32, FastEthernet0/0
+C        172.16.1.4/30 is directly connected, FastEthernet0/0
+L        172.16.1.6/32 is directly connected, FastEthernet0/0
+R3#
+
+
+------------------------------------------------
+
+7)
+R3#ping 1.4.4.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 1.4.4.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 26/35/66 ms
+R3#
+
+
+------------------------------------------------
+8)
+
+in this step R1's loopback interface 1.4.4.1 is added as a static route in 
+router R2. from the topology R3 is running EIGRP whereas R1 and R2 are using
+OSPF. R2 will not distribute the route information until the option for 
+redistribution of static routes is enabled. once the option of redistribution
+from OSPF to EIGRP is enabled R3 can receive the route information. commands to
+enable the options are as follows.
+
+config t
+router eigrp 200
+redistribute static
+end
+------------------------------------------------
+9) wireshark
+
+10) wireshark
+------------------------------------------------
